@@ -165,5 +165,96 @@ class AngryBirds:
         self.done = False
         return self.__agent_pos
     
-    
+
+    @classmethod
+    def __calculate_transition_model(cls, grid_size, actions_prob, reward_map):
+        actions = {
+            0: (-1, 0),  # Up
+            1: (1, 0),   # Down
+            2: (0, -1),  # Left
+            3: (0, 1)    # Right
+        }
+
+        neighbors = {
+            0: [2, 3],  # Up -> Left and Right
+            1: [2, 3],  # Down -> Left and Right
+            2: [0, 1],  # Left -> Up and Down
+            3: [0, 1]   # Right -> Up and Down
+        }
+
+        transition_table = {}
+
+        for row in range(grid_size):
+            for col in range(grid_size):
+                state = (row, col)
+                transition_table[state] = {}
+
+                for action in range(4):
+                    transition_table[state][action] = []
+
+                    intended_move = actions[action]
+                    next_state = (row + intended_move[0], col + intended_move[1])
+
+                    if 0 <= next_state[0] < grid_size and 0 <= next_state[1] < grid_size:
+                        reward = reward_map[next_state[0]][next_state[1]]
+                        intended_probability = actions_prob[(next_state[0], next_state[1])][action]['intended']
+                        transition_table[state][action].append((intended_probability, next_state, reward))
+                    else:
+                        intended_probability = actions_prob[state][action]['intended']
+                        transition_table[state][action].append(
+                            (intended_probability, state, reward_map[row][col]))
+
+                    for neighbor_action in neighbors[action]:
+                        neighbor_move = actions[neighbor_action]
+                        next_state = (row + neighbor_move[0], col + neighbor_move[1])
+
+                        if 0 <= next_state[0] < grid_size and 0 <= next_state[1] < grid_size:
+                            reward = reward_map[next_state[0]][next_state[1]]
+                            neighbor_probability = actions_prob[(next_state[0], next_state[1])][action]['neighbor']
+                            transition_table[state][action].append((neighbor_probability, next_state, reward))
+                        else:
+                            neighbor_probability = actions_prob[state][action]['neighbor']
+                            transition_table[state][action].append(
+                                (neighbor_probability, state, reward_map[row][col]))
+
+        return transition_table
+
+    @classmethod
+    def __is_path_exists(cls, grid, start, goal):
+        grid_size = len(grid)
+        visited = set()
+
+        def dfs(x, y):
+            if (x, y) == goal:
+                return True
+            visited.add((x, y))
+
+            directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+            for dx, dy in directions:
+                nx, ny = x + dx, y + dy
+                if (0 <= nx < grid_size and 0 <= ny < grid_size and
+                        (nx, ny) not in visited and grid[nx][ny] != 'R'):
+                    if dfs(nx, ny):
+                        return True
+            return False
+
+        return dfs(start[0], start[1])
+
+    def __generate_probability_dict(self):
+        probability_dict = {}
+
+        for row in range(self.__grid_size):
+            for col in range(self.__grid_size):
+                state = (row, col)
+                probability_dict[state] = {}
+
+                for action in range(4):
+                    intended_prob = random.uniform(0.60, 0.80)
+                    remaining_prob = 1 - intended_prob
+                    neighbor_prob = remaining_prob / 2
+
+                    probability_dict[state][action] = {
+                        'intended': intended_prob,
+                        'neighbor': neighbor_prob}
+        return probability_dict
 

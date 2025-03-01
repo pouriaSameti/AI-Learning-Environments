@@ -236,6 +236,36 @@ class AngryBirds:
         return reward_map
     
 
+    def render(self, screen):
+        for r in range(self.__grid_size):
+            for c in range(self.__grid_size):
+                color = COLORS[self.grid[r][c]]
+                pygame.draw.rect(screen, color, (c * self.__tile_size, r * self.__tile_size, self.__tile_size,
+                                                 self.__tile_size))
+
+                if self.grid[r][c] == 'P':
+                    screen.blit(self.__pig_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.grid[r][c] == 'G':
+                    screen.blit(self.__egg_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.grid[r][c] == 'Q':
+                    screen.blit(self.__queen_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.grid[r][c] == 'R':
+                    screen.blit(self.__rock_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+        for r in range(self.__grid_size + 1):
+            pygame.draw.line(screen, (0, 0, 0), (0, r * self.__tile_size), (self.__grid_size * self.__tile_size,
+                                                                            r * self.__tile_size), 2)
+        for c in range(self.__grid_size + 1):
+            pygame.draw.line(screen, (0, 0, 0), (c * self.__tile_size, 0), (c * self.__tile_size,
+                                                                            self.__grid_size * self.__tile_size), 2)
+
+        agent_row, agent_col = self.__agent_pos
+        screen.blit(self.__agent_image, (agent_col * self.__tile_size, agent_row * self.__tile_size))
+    
+
     @classmethod
     def __calculate_transition_model(cls, grid_size, actions_prob, reward_map):
         actions = {

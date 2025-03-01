@@ -165,6 +165,76 @@ class AngryBirds:
         self.done = False
         return self.__agent_pos
     
+        
+    def step(self, action):
+        actions = {
+            0: (-1, 0),  # Up
+            1: (1, 0),  # Down
+            2: (0, -1),  # Left
+            3: (0, 1)  # Right
+        }
+
+        neighbors = {
+            0: [2, 3],
+            1: [2, 3],
+            2: [0, 1],
+            3: [0, 1]
+        }
+
+        intended_probability = self.__probability_dict[self.__agent_pos][action]['intended']
+        neighbors_probability = self.__probability_dict[self.__agent_pos][action]['neighbor']
+
+        prob_dist = [0, 0, 0, 0]
+        prob_dist[action] = intended_probability
+        prob_dist[neighbors[action][0]] = neighbors_probability
+        prob_dist[neighbors[action][1]] = neighbors_probability
+
+        chosen_action = np.random.choice([0, 1, 2, 3], p=prob_dist)
+
+        dx, dy = actions[chosen_action]
+        new_row = self.__agent_pos[0] + dx
+        new_col = self.__agent_pos[1] + dy
+
+        if (0 <= new_row < self.__grid_size and 0 <= new_col < self.__grid_size and
+                self.grid[new_row][new_col] != 'R'):
+            self.__agent_pos = (new_row, new_col)
+
+        current_tile = self.grid[self.__agent_pos[0]][self.__agent_pos[1]]
+        reward = DEFAULT_REWARD
+
+        if current_tile == 'Q':
+            reward = QUEEN_REWARD
+            self.grid[self.__agent_pos[0]][self.__agent_pos[1]] = 'T'
+
+        elif current_tile == 'P':
+            reward = GOOD_PIG_REWARD
+            self.grid[self.__agent_pos[0]][self.__agent_pos[1]] = 'T'
+
+        elif current_tile == 'G':
+            reward = GOAL_REWARD
+            self.done = True
+
+        elif current_tile == 'T':
+            reward = DEFAULT_REWARD
+
+        probability = prob_dist[chosen_action]
+        self.reward = reward
+        next_state = self.__agent_pos
+        is_terminated = self.done
+        return next_state, probability, self.reward, is_terminated
+    
+    def reward_function(self):
+        # implement this function
+
+        """it returns a 8x8 matrix
+        [[-1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -400, -1, -1, -1, 180, -1, -1],
+        ...'"""
+
+        reward_map = [[0 for _ in range(self.__grid_size)] for _ in range(self.__grid_size)]
+        return reward_map
+    
 
     @classmethod
     def __calculate_transition_model(cls, grid_size, actions_prob, reward_map):
@@ -219,6 +289,7 @@ class AngryBirds:
 
         return transition_table
 
+
     @classmethod
     def __is_path_exists(cls, grid, start, goal):
         grid_size = len(grid)
@@ -239,6 +310,7 @@ class AngryBirds:
             return False
 
         return dfs(start[0], start[1])
+
 
     def __generate_probability_dict(self):
         probability_dict = {}

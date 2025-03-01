@@ -120,7 +120,6 @@ class AngryBirds:
         self.__rock_with_background.fill((135, 206, 235))
         self.__rock_with_background.blit(self.__rock_image, (0, 0))
 
-
     def __generate_grid(self):
 
         while True:
@@ -164,8 +163,7 @@ class AngryBirds:
         self.reward = 0
         self.done = False
         return self.__agent_pos
-    
-        
+
     def step(self, action):
         actions = {
             0: (-1, 0),  # Up
@@ -222,19 +220,6 @@ class AngryBirds:
         next_state = self.__agent_pos
         is_terminated = self.done
         return next_state, probability, self.reward, is_terminated
-    
-    def reward_function(self):
-        # implement this function
-
-        """it returns a 8x8 matrix
-        [[-1, -1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1, -1],
-        [-1, -400, -1, -1, -1, 180, -1, -1],
-        ...'"""
-
-        reward_map = [[0 for _ in range(self.__grid_size)] for _ in range(self.__grid_size)]
-        return reward_map
-    
 
     def render(self, screen):
         for r in range(self.__grid_size):
@@ -264,7 +249,18 @@ class AngryBirds:
 
         agent_row, agent_col = self.__agent_pos
         screen.blit(self.__agent_image, (agent_col * self.__tile_size, agent_row * self.__tile_size))
-    
+
+    def reward_function(self):
+        # implement this function
+
+        """it returns a 8x8 matrix
+        [[-1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -400, -1, -1, -1, 180, -1, -1],
+        ...'"""
+
+        reward_map = [[0 for _ in range(self.__grid_size)] for _ in range(self.__grid_size)]
+        return reward_map
 
     @classmethod
     def __calculate_transition_model(cls, grid_size, actions_prob, reward_map):
@@ -319,7 +315,6 @@ class AngryBirds:
 
         return transition_table
 
-
     @classmethod
     def __is_path_exists(cls, grid, start, goal):
         grid_size = len(grid)
@@ -341,7 +336,6 @@ class AngryBirds:
 
         return dfs(start[0], start[1])
 
-
     def __generate_probability_dict(self):
         probability_dict = {}
 
@@ -359,4 +353,3 @@ class AngryBirds:
                         'intended': intended_prob,
                         'neighbor': neighbor_prob}
         return probability_dict
-

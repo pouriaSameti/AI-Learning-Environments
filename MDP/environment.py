@@ -120,4 +120,50 @@ class AngryBirds:
         self.__rock_with_background.fill((135, 206, 235))
         self.__rock_with_background.blit(self.__rock_image, (0, 0))
 
-        
+
+    def __generate_grid(self):
+
+        while True:
+            filled_spaces = [(0, 0), (self.__grid_size - 1, self.__grid_size - 1)]
+            grid = [['T' for _ in range(self.__grid_size)] for _ in range(self.__grid_size)]
+
+            num_pigs = self.__num_pigs
+            for _ in range(num_pigs):
+                while True:
+                    r, c = random.randint(0, self.__grid_size - 1), random.randint(0, self.__grid_size - 1)
+                    if (r, c) not in filled_spaces:
+                        grid[r][c] = 'P'
+                        filled_spaces.append((r, c))
+                        break
+
+            for _ in range(self.__num_queens):
+                while True:
+                    r, c = random.randint(0, self.__grid_size - 1), random.randint(0, self.__grid_size - 1)
+                    if (r, c) not in filled_spaces:
+                        grid[r][c] = 'Q'
+                        filled_spaces.append((r, c))
+                        break
+
+            for _ in range(self.__num_rocks):
+                while True:
+                    r, c = random.randint(0, self.__grid_size - 1), random.randint(0, self.__grid_size - 1)
+                    if (r, c) not in filled_spaces:
+                        grid[r][c] = 'R'
+                        filled_spaces.append((r, c))
+                        break
+
+            grid[self.__grid_size - 1][self.__grid_size - 1] = 'G'
+            if AngryBirds.__is_path_exists(grid=grid, start=(0, 0), goal=(7, 7)):
+                break
+
+        return grid
+
+    def reset(self):
+        self.grid = copy.deepcopy(self.__base_grid)
+        self.__agent_pos = (0, 0)
+        self.reward = 0
+        self.done = False
+        return self.__agent_pos
+    
+    
+

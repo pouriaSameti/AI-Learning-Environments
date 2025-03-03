@@ -254,6 +254,39 @@ class UnknownAngryBirds:
         self.reward = reward
         self.pig_states = self.__get_pig_state()
         return next_state, self.reward, self.pig_states, is_terminated
+
+
+    def render(self, screen):
+        for r in range(self.__grid_size):
+            for c in range(self.__grid_size):
+                color = COLORS[self.__grid[r][c]]
+                pygame.draw.rect(screen, color, (c * self.__tile_size, r * self.__tile_size, self.__tile_size,
+                                                 self.__tile_size))
+
+                if self.__grid[r][c] == 'P':
+                    screen.blit(self.__pig_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.__grid[r][c] == 'G':
+                    screen.blit(self.__yellow_bird_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.__grid[r][c] == 'Q':
+                    screen.blit(self.__queen_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.__grid[r][c] == 'R':
+                    screen.blit(self.__rock_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.__grid[r][c] == 'TNT':
+                    screen.blit(self.__tnt_background, (c * self.__tile_size, r * self.__tile_size))
+
+        for r in range(self.__grid_size + 1):
+            pygame.draw.line(screen, (0, 0, 0), (0, r * self.__tile_size), (self.__grid_size * self.__tile_size,
+                                                                            r * self.__tile_size), 2)
+        for c in range(self.__grid_size + 1):
+            pygame.draw.line(screen, (0, 0, 0), (c * self.__tile_size, 0), (c * self.__tile_size,
+                                                                            self.__grid_size * self.__tile_size), 2)
+
+        agent_row, agent_col = self.__agent_pos
+        screen.blit(self.__agent_image, (agent_col * self.__tile_size, agent_row * self.__tile_size))
     
 
     @classmethod

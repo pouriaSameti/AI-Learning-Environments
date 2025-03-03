@@ -189,6 +189,73 @@ class UnknownAngryBirds:
         return self.__agent_pos
     
 
+    def step(self, action):
+        actions = {
+            0: (-1, 0),  # Up
+            1: (1, 0),   # Down
+            2: (0, -1),  # Left
+            3: (0, 1)    # Right
+        }
+
+        neighbors = {
+            0: [2, 3],
+            1: [2, 3],
+            2: [0, 1],
+            3: [0, 1]
+        }
+
+        intended_probability = self.__probability_dict[self.__agent_pos][action]['intended']
+        neighbors_probability = self.__probability_dict[self.__agent_pos][action]['neighbor']
+
+        prob_dist = [0, 0, 0, 0]
+        prob_dist[action] = intended_probability
+        prob_dist[neighbors[action][0]] = neighbors_probability
+        prob_dist[neighbors[action][1]] = neighbors_probability
+
+        chosen_action = np.random.choice([0, 1, 2, 3], p=prob_dist)
+
+        dx, dy = actions[chosen_action]
+        new_row = self.__agent_pos[0] + dx
+        new_col = self.__agent_pos[1] + dy
+
+        if (0 <= new_row < self.__grid_size and 0 <= new_col < self.__grid_size and
+                self.__grid[new_row][new_col] != 'R'):
+            self.__agent_pos = (new_row, new_col)
+
+        self.__actions_taken += 1
+        current_tile = self.__grid[self.__agent_pos[0]][self.__agent_pos[1]]
+        reward = DEFAULT_REWARD
+
+        if current_tile == 'Q':
+            reward = QUEEN_REWARD
+            self.__grid[self.__agent_pos[0]][self.__agent_pos[1]] = 'T'
+
+        elif current_tile == 'P':
+            reward = GOOD_PIG_REWARD
+            self.__grid[self.__agent_pos[0]][self.__agent_pos[1]] = 'T'
+
+        elif current_tile == 'G':
+            reward = GOAL_REWARD
+            self.done = True
+
+        elif current_tile == 'TNT':
+            reward = TNT_REWARD
+            self.done = True
+
+        elif current_tile == 'T':
+            reward = DEFAULT_REWARD
+
+        if self.__actions_taken >= self.__max_actions:
+            reward = ACTION_TAKEN_REWARD
+            self.done = True
+
+        next_state = self.__agent_pos
+        is_terminated = self.done
+        self.reward = reward
+        self.pig_states = self.__get_pig_state()
+        return next_state, self.reward, self.pig_states, is_terminated
+    
+
     @classmethod
     def __is_path_exists(cls, grid, start, goal):
         grid_size = len(grid)

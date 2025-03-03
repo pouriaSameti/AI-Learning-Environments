@@ -310,7 +310,6 @@ class UnknownAngryBirds:
 
         return dfs(start[0], start[1])
 
-
     def __generate_probability_dict(self):
         probability_dict = {}
 
@@ -329,3 +328,12 @@ class UnknownAngryBirds:
                         'neighbor': neighbor_prob}
         return probability_dict
 
+    def __get_pig_state(self):
+        grid = self.__grid
+        states = [False for _ in range(self.__num_pigs)]
+
+        for i, pig_coordinate in enumerate(self.__pig_coordinates):
+            x, y = pig_coordinate[0], pig_coordinate[1]
+            if grid[x][y] == 'P':
+                states[i] = True
+        return states

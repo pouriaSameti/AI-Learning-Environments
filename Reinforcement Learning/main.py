@@ -7,7 +7,7 @@ if __name__ == "__main__":
 
     env = UnknownAngryBirds()
     screen, clock = PygameInit.initialization()
-    FPS = 4
+    FPS = 8
 
     episode_reward = []
     for _ in range(5):

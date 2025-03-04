@@ -131,7 +131,6 @@ class UnknownAngryBirds:
         self.__tnt_background.fill((245, 245, 220))
         self.__tnt_background.blit(self.__tnt_image, (0, 0))
 
-
     def __generate_grid(self):
         grid = [['T' for _ in range(self.__grid_size)] for _ in range(self.__grid_size)]
 
@@ -179,7 +178,6 @@ class UnknownAngryBirds:
                 break
         return grid
 
-
     def reset(self):
         self.__grid = copy.deepcopy(self.__base_grid)
         self.__agent_pos = (0, 0)
@@ -187,7 +185,6 @@ class UnknownAngryBirds:
         self.done = False
         self.__actions_taken = 0
         return self.__agent_pos
-    
 
     def step(self, action):
         actions = {
@@ -255,7 +252,6 @@ class UnknownAngryBirds:
         self.pig_states = self.__get_pig_state()
         return next_state, self.reward, self.pig_states, is_terminated
 
-
     def render(self, screen):
         for r in range(self.__grid_size):
             for c in range(self.__grid_size):
@@ -287,7 +283,6 @@ class UnknownAngryBirds:
 
         agent_row, agent_col = self.__agent_pos
         screen.blit(self.__agent_image, (agent_col * self.__tile_size, agent_row * self.__tile_size))
-    
 
     @classmethod
     def __is_path_exists(cls, grid, start, goal):

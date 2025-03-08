@@ -143,3 +143,50 @@ class AngryGame:
                 grid[i][j] = template_str[i][j]
 
         return grid
+
+
+    def reset(self):
+        self.grid = copy.deepcopy(self.__base_grid)
+        self.num_actions = 0
+
+    
+    @classmethod
+    def print_grid(cls, grid):
+        printed_grid = ''
+
+        for r in range(len(grid)):
+            printed_grid += '\n'
+            for c in range(len(grid)):
+                printed_grid += grid[r][c]
+
+        return printed_grid + '\n'
+        
+
+    def __a_star_cost(self, start, goal):
+
+        def heuristic(a, b):
+            return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+        open_set = []
+        heapq.heappush(open_set, (0, start))
+        g_score = {start: 0}
+        f_score = {start: heuristic(start, goal)}
+
+        while open_set:
+            _, current = heapq.heappop(open_set)
+
+            if current == goal:
+                return g_score[current]
+
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                neighbor = (current[0] + dx, current[1] + dy)
+                if not self.__is_valid_for_queen_position(self.grid, neighbor[0], neighbor[1]):
+                    continue
+
+                tentative_g_score = g_score[current] + 1
+                if neighbor not in g_score or tentative_g_score < g_score[neighbor]:
+                    g_score[neighbor] = tentative_g_score
+                    f_score[neighbor] = tentative_g_score + heuristic(neighbor, goal)
+                    heapq.heappush(open_set, (f_score[neighbor], neighbor))
+
+        return float('inf')

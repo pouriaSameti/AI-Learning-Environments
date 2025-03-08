@@ -81,3 +81,65 @@ class PygameInit:
         clock = pygame.time.Clock()
 
         return screen, clock
+
+
+#######################################################
+#                DONT CHANGE THIS PART                #
+#######################################################
+class AngryGame:
+    def __init__(self, template: str):
+        self.__grid_size = 10
+        self.__tile_size = 80
+        self.__template_type = template
+
+        self.__base_grid = self.__generate_grid()
+        self.grid = copy.deepcopy(self.__base_grid)
+        self.__base_grid = copy.deepcopy(self.grid)
+
+        self.num_actions = 0
+
+        self.__hen_image = pygame.image.load("Env/icons/white bird.png")
+        self.__hen_image = pygame.transform.scale(self.__hen_image, (self.__tile_size, self.__tile_size))
+
+        self.__queen_image = pygame.image.load('Env/icons/queen.png')
+        self.__queen_image = pygame.transform.scale(self.__queen_image, (self.__tile_size, self.__tile_size))
+        self.__queen_with_background = pygame.Surface((self.__tile_size, self.__tile_size))
+        self.__queen_with_background.fill((143, 188, 143))
+        self.__queen_with_background.blit(self.__queen_image, (0, 0))
+
+        self.__pig_image = pygame.image.load('Env/icons/pig.png')
+        self.__pig_image = pygame.transform.scale(self.__pig_image, (self.__tile_size, self.__tile_size))
+        self.__pig_with_background = pygame.Surface((self.__tile_size, self.__tile_size))
+        self.__pig_with_background.fill((143, 188, 143))
+        self.__pig_with_background.blit(self.__pig_image, (0, 0))
+
+        self.__egg = pygame.image.load('Env/icons/egg.png')
+        self.__egg = pygame.transform.scale(self.__egg, (self.__tile_size, self.__tile_size))
+        self.__egg_with_background = pygame.Surface((self.__tile_size, self.__tile_size))
+        self.__egg_with_background.fill((143, 188, 143))
+        self.__egg_with_background.blit(self.__egg, (0, 0))
+
+        self.__rock_image = pygame.image.load('Env/icons/rocks.png')
+        self.__rock_image = pygame.transform.scale(self.__rock_image, (self.__tile_size, self.__tile_size))
+        self.__rock_with_background = pygame.Surface((self.__tile_size, self.__tile_size))
+        self.__rock_with_background.fill((143, 188, 143))
+        self.__rock_with_background.blit(self.__rock_image, (0, 0))
+
+        self.__slingshot_image = pygame.image.load('Env/icons/slingshot.png')
+        self.__slingshot_image = pygame.transform.scale(self.__slingshot_image, (self.__tile_size, self.__tile_size))
+        self.__slingshot_image_background = pygame.Surface((self.__tile_size, self.__tile_size))
+        self.__slingshot_image_background.fill((143, 188, 143))
+        self.__slingshot_image_background.blit(self.__slingshot_image, (0, 0))
+
+    def __generate_grid(self):
+
+        grid = [['T' for _ in range(self.__grid_size)] for _ in range(self.__grid_size)]
+
+        with open(f'Env/templates/{self.__template_type}.txt') as file:
+            template_str = file.readlines()
+
+        for i in range(self.__grid_size):
+            for j in range(self.__grid_size):
+                grid[i][j] = template_str[i][j]
+
+        return grid

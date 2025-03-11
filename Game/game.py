@@ -149,6 +149,95 @@ class AngryGame:
         self.grid = copy.deepcopy(self.__base_grid)
         self.num_actions = 0
 
+
+   def hen_step(self, agent_action):
+        hen_pos = self.get_hen_position(self.grid)
+
+        actions = {
+            0: (-1, 0),  # Up
+            1: (1, 0),   # Down
+            2: (0, -1),  # Left
+            3: (0, 1),   # Right
+        }
+
+        dx, dy = actions[agent_action]
+        new_row = hen_pos[0] + dx
+        new_col = hen_pos[1] + dy
+
+        if self.__is_valid_for_hen_position(self.grid, new_row, new_col):
+
+            self.grid[hen_pos[0]][hen_pos[1]] = 'T'
+            hen_pos = (new_row, new_col)
+            self.grid[hen_pos[0]][hen_pos[1]] = 'H'
+
+            self.num_actions += 1
+
+    @classmethod
+    def generate_hen_successors(cls, grid):
+        hen_pos = cls.get_hen_position(grid)
+        if not hen_pos:
+            return []
+
+        actions = {
+            0: (-1, 0),  # Up
+            1: (1, 0),   # Down
+            2: (0, -1),  # Left
+            3: (0, 1),   # Right
+        }
+
+        successors = []
+        for action in actions:
+            dx, dy = actions[action]
+            new_row, new_col = hen_pos[0] + dx, hen_pos[1] + dy
+            if cls.__is_valid_for_hen_position(grid, new_row, new_col):
+
+                successor_grid = copy.deepcopy(grid)
+
+                successor_grid[new_row][new_col] = 'H'
+
+                successor_grid[hen_pos[0]][hen_pos[1]] = 'T'
+                successors.append((successor_grid, action))
+
+        return successors
+
+
+   @classmethod
+    def __is_valid_for_queen_position(cls, grid, new_row, new_col):
+        return (
+                0 <= new_row < len(grid)
+                and 0 <= new_col < len(grid[0])
+                and grid[new_row][new_col] != 'R'
+                and grid[new_row][new_col] != 'S'
+                and grid[new_row][new_col] != 'P'
+                and grid[new_row][new_col] != 'E')
+
+    @classmethod
+    def __is_valid_for_hen_position(cls, grid, new_row, new_col):
+
+        return (
+                0 <= new_row < len(grid)
+                and 0 <= new_col < len(grid)
+                and grid[new_row][new_col] != 'Q'
+                and grid[new_row][new_col] != 'R'
+        )
+
+    @classmethod
+    def is_queen_exists(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'Q':
+                    return True
+        return False
+
+    @classmethod
+    def is_hen_exists(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'H':
+                    return True
+        return False
+
+
     
     @classmethod
     def print_grid(cls, grid):

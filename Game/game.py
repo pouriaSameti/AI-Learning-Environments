@@ -298,7 +298,52 @@ class AngryGame:
                     return True
         return False
 
+    @classmethod
+    def get_egg_coordinate(cls, grid):
+        food_coordinates = []
+        for r in range(len(grid)):
+            for c in range(len(grid[0])):
+                if grid[r][c] == 'E':
+                    food_coordinates.append((r, c))
+        return food_coordinates
 
+    @classmethod
+    def get_pig_coordinate(cls, grid):
+        pig_coordinates = []
+        for r in range(len(grid)):
+            for c in range(len(grid[0])):
+                if grid[r][c] == 'P':
+                    pig_coordinates.append((r, c))
+        return pig_coordinates
+
+    @classmethod
+    def get_hen_position(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'H':
+                    return tuple([r, c])
+
+    @classmethod
+    def get_queen_position(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'Q':
+                    return tuple([r, c])
+
+    @classmethod
+    def get_slingshot_position(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'S':
+                    return tuple([r, c])
+
+    @classmethod
+    def __check_lose(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'H':
+                    return False
+        return True
     
     @classmethod
     def print_grid(cls, grid):

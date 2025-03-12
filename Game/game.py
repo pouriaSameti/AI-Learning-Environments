@@ -354,6 +354,39 @@ class AngryGame:
 
         return printed_grid + '\n'
 
+    @classmethod
+    def is_win(cls, grid):
+        hen_pos = cls.get_hen_position(grid)
+        queen_pos = cls.get_queen_position(grid)
+        sling_pos = cls.get_slingshot_position(grid)
+
+        if not sling_pos:
+            return True
+
+        if not queen_pos:
+            return True
+
+        if hen_pos and sling_pos and hen_pos == sling_pos:
+            return True
+
+        return False
+
+    @classmethod
+    def is_lose(cls, grid, num_actions):
+        return cls.__check_lose(grid) or num_actions >= MAX_ACTIONS
+
+    @classmethod
+    def calculate_score(cls, grid, num_actions):
+
+        egg_score = (EGGS - len(cls.get_egg_coordinate(grid))) * EGG_REWARD
+        pig_score = (PIGS - len(cls.get_pig_coordinate(grid))) * PIG_REWARD
+        actions_score = DEFAULT_REWARD * num_actions
+
+        sling_score = SLING_REWARD if cls.is_win(grid) else 0
+        lose_score = LOSE_REWARD if cls.is_lose(grid, num_actions) else 0
+
+        return egg_score + sling_score + actions_score + pig_score + lose_score
+    
     def __a_star_cost(self, start, goal):
 
         def heuristic(a, b):
@@ -382,4 +415,3 @@ class AngryGame:
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
 
         return float('inf')
-    

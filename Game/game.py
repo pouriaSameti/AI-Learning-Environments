@@ -143,13 +143,12 @@ class AngryGame:
 
         return grid
 
-
     def reset(self):
         self.grid = copy.deepcopy(self.__base_grid)
         self.num_actions = 0
 
 
-   def hen_step(self, agent_action):
+    def hen_step(self, agent_action):
         hen_pos = self.get_hen_position(self.grid)
 
         actions = {
@@ -170,6 +169,7 @@ class AngryGame:
             self.grid[hen_pos[0]][hen_pos[1]] = 'H'
 
             self.num_actions += 1
+
 
     @classmethod
     def generate_hen_successors(cls, grid):
@@ -234,7 +234,6 @@ class AngryGame:
                 queen_pos = (new_row, new_col)
                 self.grid[queen_pos[0]][queen_pos[1]] = 'Q'
 
-
     @classmethod
     def generate_queen_successors(cls, grid):
         queen_pos = cls.get_queen_position(grid)
@@ -261,8 +260,7 @@ class AngryGame:
 
         return successors
 
-
-   @classmethod
+    @classmethod
     def __is_valid_for_queen_position(cls, grid, new_row, new_col):
         return (
                 0 <= new_row < len(grid)
@@ -355,7 +353,6 @@ class AngryGame:
                 printed_grid += grid[r][c]
 
         return printed_grid + '\n'
-        
 
     def __a_star_cost(self, start, goal):
 
@@ -385,3 +382,4 @@ class AngryGame:
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
 
         return float('inf')
+    

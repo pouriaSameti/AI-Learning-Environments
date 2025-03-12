@@ -375,6 +375,39 @@ class AngryGame:
     def is_lose(cls, grid, num_actions):
         return cls.__check_lose(grid) or num_actions >= MAX_ACTIONS
 
+    def render(self, screen):
+        for r in range(self.__grid_size):
+            for c in range(self.__grid_size):
+                color = COLORS[self.grid[r][c]]
+                pygame.draw.rect(screen, color, (c * self.__tile_size, r * self.__tile_size, self.__tile_size,
+                                                 self.__tile_size))
+
+                if self.grid[r][c] == 'H':
+                    screen.blit(self.__hen_image, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.grid[r][c] == 'Q':
+                    screen.blit(self.__queen_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.grid[r][c] == 'R':
+                    screen.blit(self.__rock_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.grid[r][c] == 'E':
+                    screen.blit(self.__egg_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.grid[r][c] == 'S':
+                    screen.blit(self.__slingshot_image_background, (c * self.__tile_size, r * self.__tile_size))
+
+                if self.grid[r][c] == 'P':
+                    screen.blit(self.__pig_with_background, (c * self.__tile_size, r * self.__tile_size))
+
+        for r in range(self.__grid_size + 1):
+            pygame.draw.line(screen, (0, 0, 0), (0, r * self.__tile_size), (self.__grid_size * self.__tile_size,
+                                                                            r * self.__tile_size), 2)
+        for c in range(self.__grid_size + 1):
+            pygame.draw.line(screen, (0, 0, 0), (c * self.__tile_size, 0), (c * self.__tile_size,
+                                                                            self.__grid_size * self.__tile_size), 2)
+
+
     @classmethod
     def calculate_score(cls, grid, num_actions):
 

@@ -65,13 +65,15 @@ MAX_ACTIONS = 150
 #######################################################
 #                DONT CHANGE THIS PART                #
 #######################################################
+
+
 class PygameInit:
 
     @classmethod
     def initialization(cls):
         grid_size_x = 10
         grid_size_y = 10
-        tile_size = 80
+        tile_size = 70
 
         pygame.init()
         screen = pygame.display.set_mode((grid_size_x * tile_size, grid_size_y * tile_size))
@@ -81,14 +83,13 @@ class PygameInit:
         return screen, clock
 
 
-
 #######################################################
 #                DONT CHANGE THIS PART                #
 #######################################################
 class AngryGame:
     def __init__(self, template: str):
         self.__grid_size = 10
-        self.__tile_size = 80
+        self.__tile_size = 70
         self.__template_type = template
 
         self.__base_grid = self.__generate_grid()
@@ -147,7 +148,6 @@ class AngryGame:
         self.grid = copy.deepcopy(self.__base_grid)
         self.num_actions = 0
 
-
     def hen_step(self, agent_action):
         hen_pos = self.get_hen_position(self.grid)
 
@@ -169,36 +169,6 @@ class AngryGame:
             self.grid[hen_pos[0]][hen_pos[1]] = 'H'
 
             self.num_actions += 1
-
-
-    @classmethod
-    def generate_hen_successors(cls, grid):
-        hen_pos = cls.get_hen_position(grid)
-        if not hen_pos:
-            return []
-
-        actions = {
-            0: (-1, 0),  # Up
-            1: (1, 0),   # Down
-            2: (0, -1),  # Left
-            3: (0, 1),   # Right
-        }
-
-        successors = []
-        for action in actions:
-            dx, dy = actions[action]
-            new_row, new_col = hen_pos[0] + dx, hen_pos[1] + dy
-            if cls.__is_valid_for_hen_position(grid, new_row, new_col):
-
-                successor_grid = copy.deepcopy(grid)
-
-                successor_grid[new_row][new_col] = 'H'
-
-                successor_grid[hen_pos[0]][hen_pos[1]] = 'T'
-                successors.append((successor_grid, action))
-
-        return successors
-
 
     def queen_step(self):
         actions = {
@@ -235,6 +205,34 @@ class AngryGame:
                 self.grid[queen_pos[0]][queen_pos[1]] = 'Q'
 
     @classmethod
+    def generate_hen_successors(cls, grid):
+        hen_pos = cls.get_hen_position(grid)
+        if not hen_pos:
+            return []
+
+        actions = {
+            0: (-1, 0),  # Up
+            1: (1, 0),   # Down
+            2: (0, -1),  # Left
+            3: (0, 1),   # Right
+        }
+
+        successors = []
+        for action in actions:
+            dx, dy = actions[action]
+            new_row, new_col = hen_pos[0] + dx, hen_pos[1] + dy
+            if cls.__is_valid_for_hen_position(grid, new_row, new_col):
+
+                successor_grid = copy.deepcopy(grid)
+
+                successor_grid[new_row][new_col] = 'H'
+
+                successor_grid[hen_pos[0]][hen_pos[1]] = 'T'
+                successors.append((successor_grid, action))
+
+        return successors
+
+    @classmethod
     def generate_queen_successors(cls, grid):
         queen_pos = cls.get_queen_position(grid)
         if not queen_pos:
@@ -259,42 +257,6 @@ class AngryGame:
                 successors.append((successor_grid, action))
 
         return successors
-
-    @classmethod
-    def __is_valid_for_queen_position(cls, grid, new_row, new_col):
-        return (
-                0 <= new_row < len(grid)
-                and 0 <= new_col < len(grid[0])
-                and grid[new_row][new_col] != 'R'
-                and grid[new_row][new_col] != 'S'
-                and grid[new_row][new_col] != 'P'
-                and grid[new_row][new_col] != 'E')
-
-    @classmethod
-    def __is_valid_for_hen_position(cls, grid, new_row, new_col):
-
-        return (
-                0 <= new_row < len(grid)
-                and 0 <= new_col < len(grid)
-                and grid[new_row][new_col] != 'Q'
-                and grid[new_row][new_col] != 'R'
-        )
-
-    @classmethod
-    def is_queen_exists(cls, grid):
-        for r in range(len(grid)):
-            for c in range(len(grid)):
-                if grid[r][c] == 'Q':
-                    return True
-        return False
-
-    @classmethod
-    def is_hen_exists(cls, grid):
-        for r in range(len(grid)):
-            for c in range(len(grid)):
-                if grid[r][c] == 'H':
-                    return True
-        return False
 
     @classmethod
     def get_egg_coordinate(cls, grid):
@@ -342,17 +304,6 @@ class AngryGame:
                 if grid[r][c] == 'H':
                     return False
         return True
-    
-    @classmethod
-    def print_grid(cls, grid):
-        printed_grid = ''
-
-        for r in range(len(grid)):
-            printed_grid += '\n'
-            for c in range(len(grid)):
-                printed_grid += grid[r][c]
-
-        return printed_grid + '\n'
 
     @classmethod
     def is_win(cls, grid):
@@ -374,6 +325,18 @@ class AngryGame:
     @classmethod
     def is_lose(cls, grid, num_actions):
         return cls.__check_lose(grid) or num_actions >= MAX_ACTIONS
+
+    @classmethod
+    def calculate_score(cls, grid, num_actions):
+
+        egg_score = (EGGS - len(cls.get_egg_coordinate(grid))) * EGG_REWARD
+        pig_score = (PIGS - len(cls.get_pig_coordinate(grid))) * PIG_REWARD
+        actions_score = DEFAULT_REWARD * num_actions
+
+        sling_score = SLING_REWARD if cls.is_win(grid) else 0
+        lose_score = LOSE_REWARD if cls.is_lose(grid, num_actions) else 0
+
+        return egg_score + sling_score + actions_score + pig_score + lose_score
 
     def render(self, screen):
         for r in range(self.__grid_size):
@@ -407,19 +370,53 @@ class AngryGame:
             pygame.draw.line(screen, (0, 0, 0), (c * self.__tile_size, 0), (c * self.__tile_size,
                                                                             self.__grid_size * self.__tile_size), 2)
 
+    @classmethod
+    def __is_valid_for_queen_position(cls, grid, new_row, new_col):
+        return (
+                0 <= new_row < len(grid)
+                and 0 <= new_col < len(grid[0])
+                and grid[new_row][new_col] != 'R'
+                and grid[new_row][new_col] != 'S'
+                and grid[new_row][new_col] != 'P'
+                and grid[new_row][new_col] != 'E')
 
     @classmethod
-    def calculate_score(cls, grid, num_actions):
+    def __is_valid_for_hen_position(cls, grid, new_row, new_col):
 
-        egg_score = (EGGS - len(cls.get_egg_coordinate(grid))) * EGG_REWARD
-        pig_score = (PIGS - len(cls.get_pig_coordinate(grid))) * PIG_REWARD
-        actions_score = DEFAULT_REWARD * num_actions
+        return (
+                0 <= new_row < len(grid)
+                and 0 <= new_col < len(grid)
+                and grid[new_row][new_col] != 'Q'
+                and grid[new_row][new_col] != 'R'
+        )
 
-        sling_score = SLING_REWARD if cls.is_win(grid) else 0
-        lose_score = LOSE_REWARD if cls.is_lose(grid, num_actions) else 0
+    @classmethod
+    def is_queen_exists(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'Q':
+                    return True
+        return False
 
-        return egg_score + sling_score + actions_score + pig_score + lose_score
-    
+    @classmethod
+    def is_hen_exists(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'H':
+                    return True
+        return False
+
+    @classmethod
+    def print_grid(cls, grid):
+        printed_grid = ''
+
+        for r in range(len(grid)):
+            printed_grid += '\n'
+            for c in range(len(grid)):
+                printed_grid += grid[r][c]
+
+        return printed_grid + '\n'
+
     def __a_star_cost(self, start, goal):
 
         def heuristic(a, b):

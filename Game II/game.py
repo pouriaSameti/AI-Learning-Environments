@@ -257,6 +257,20 @@ class AngryGame:
     @classmethod
     def is_lose(cls, grid, num_actions):
         return cls.__check_lose(grid) or num_actions >= MAX_ACTIONS
+    
+
+    @classmethod
+    def calculate_score(cls, grid, num_actions):
+
+        egg_score = (EGGS - len(cls.get_egg_coordinate(grid))) * EGG_REWARD
+        pig_score = (PIGS - len(cls.get_pig_coordinate(grid))) * PIG_REWARD
+        queen_score = CATCH_QUEEN if not AngryGame.is_queen_exists(grid) else 0
+        actions_score = DEFAULT_REWARD * num_actions
+
+        sling_score = SLING_REWARD if cls.is_win(grid) else 0
+        lose_score = LOSE_REWARD if cls.is_lose(grid, num_actions) else 0
+
+        return egg_score + sling_score + actions_score + pig_score + lose_score + queen_score
 
     @classmethod
     def print_grid(cls, grid):

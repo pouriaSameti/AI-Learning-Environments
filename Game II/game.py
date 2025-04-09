@@ -156,6 +156,30 @@ class AngryGame:
         self.num_actions = 0
 
     @classmethod
+    def is_queen_exists(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'Q':
+                    return True
+        return False
+
+    @classmethod
+    def is_hen_exists(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'H':
+                    return True
+        return False
+
+    @classmethod
+    def is_bird_exists(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'B':
+                    return True
+        return False
+
+    @classmethod
     def print_grid(cls, grid):
         printed_grid = ''
 

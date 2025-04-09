@@ -224,6 +224,39 @@ class AngryGame:
                 if grid[r][c] == 'B':
                     return True
         return False
+    
+    @classmethod
+    def is_win(cls, grid):
+        hen_pos = cls.get_hen_position(grid)
+        bird_pos = cls.get_bird_position(grid)
+        queen_pos = cls.get_queen_position(grid)
+        sling_pos = cls.get_slingshot_position(grid)
+
+        if not sling_pos:
+            return True
+
+        if not queen_pos:
+            return True
+
+        if bird_pos and queen_pos and bird_pos == queen_pos:
+            return True
+
+        if hen_pos and sling_pos and hen_pos == sling_pos:
+            return True
+
+        return False
+
+    @classmethod
+    def __check_lose(cls, grid):
+        for r in range(len(grid)):
+            for c in range(len(grid)):
+                if grid[r][c] == 'H':
+                    return False
+        return True
+    
+    @classmethod
+    def is_lose(cls, grid, num_actions):
+        return cls.__check_lose(grid) or num_actions >= MAX_ACTIONS
 
     @classmethod
     def print_grid(cls, grid):

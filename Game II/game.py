@@ -154,4 +154,14 @@ class AngryGame:
     def reset(self):
         self.grid = copy.deepcopy(self.__base_grid)
         self.num_actions = 0
-        
+
+    @classmethod
+    def print_grid(cls, grid):
+        printed_grid = ''
+
+        for r in range(len(grid)):
+            printed_grid += '\n'
+            for c in range(len(grid)):
+                printed_grid += grid[r][c]
+
+        return printed_grid + '\n'

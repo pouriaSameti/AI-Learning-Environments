@@ -224,6 +224,40 @@ class AngryGame:
                 if grid[r][c] == 'B':
                     return True
         return False
+
+    @classmethod
+    def __is_valid_for_queen_position(cls, grid, new_row, new_col):
+        return (
+                0 <= new_row < len(grid)
+                and 0 <= new_col < len(grid[0])
+                and grid[new_row][new_col] != 'R'
+                and grid[new_row][new_col] != 'B'
+                and grid[new_row][new_col] != 'S'
+                and grid[new_row][new_col] != 'P'
+                and grid[new_row][new_col] != 'E')
+
+    @classmethod
+    def __is_valid_for_hen_position(cls, grid, new_row, new_col):
+
+        return (
+                0 <= new_row < len(grid)
+                and 0 <= new_col < len(grid)
+                and grid[new_row][new_col] != 'B'
+                and grid[new_row][new_col] != 'Q'
+                and grid[new_row][new_col] != 'R'
+        )
+
+    @classmethod
+    def __is_valid_for_bird_position(cls, grid, new_row, new_col):
+        return (
+                0 <= new_row < len(grid)
+                and 0 <= new_col < len(grid)
+                and grid[new_row][new_col] != 'H'
+                and grid[new_row][new_col] != 'E'
+                and grid[new_row][new_col] != 'R'
+                and grid[new_row][new_col] != 'S'
+                and grid[new_row][new_col] != 'P'
+        )
     
     @classmethod
     def is_win(cls, grid):
@@ -282,3 +316,4 @@ class AngryGame:
                 printed_grid += grid[r][c]
 
         return printed_grid + '\n'
+    

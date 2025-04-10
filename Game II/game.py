@@ -177,6 +177,26 @@ class AngryGame:
 
             self.num_actions += 1
 
+    def bird_step(self, action):
+        bird_pos = self.get_bird_position(self.grid)
+        if bird_pos:
+            actions = {
+                0: (-1, 0),  # Up
+                1: (1, 0),  # Down
+                2: (0, -1),  # Left
+                3: (0, 1),  # Right
+            }
+
+            dx, dy = actions[action]
+            new_row, new_col = bird_pos[0] + dx, bird_pos[1] + dy
+
+            if self.__is_valid_for_bird_position(self.grid, new_row, new_col):
+
+                self.grid[bird_pos[0]][bird_pos[1]] = 'T'
+                bird_pos = (new_row, new_col)
+                self.grid[bird_pos[0]][bird_pos[1]] = 'B'
+                self.num_actions += 1
+                
     @classmethod
     def get_egg_coordinate(cls, grid):
         food_coordinates = []

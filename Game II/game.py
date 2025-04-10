@@ -196,7 +196,41 @@ class AngryGame:
                 bird_pos = (new_row, new_col)
                 self.grid[bird_pos[0]][bird_pos[1]] = 'B'
                 self.num_actions += 1
-                
+
+    def queen_step(self):
+        actions = {
+            0: (-1, 0),  # Up
+            1: (1, 0),   # Down
+            2: (0, -1),  # Left
+            3: (0, 1),   # Right
+        }
+
+        if self.is_queen_exists(self.grid):
+            queen_pos = self.get_queen_position(self.grid)
+            hen_pos = self.get_hen_position(self.grid)
+
+            best_action = None
+            min_cost = float('inf')
+
+            for action, (dx, dy) in actions.items():
+                new_row, new_col = queen_pos[0] + dx, queen_pos[1] + dy
+
+                if self.__is_valid_for_queen_position(self.grid, new_row, new_col) and \
+                        self.grid[new_row][new_col] != 'E':
+                    cost = self.__a_star_cost((new_row, new_col), hen_pos)
+
+                    if cost < min_cost:
+                        min_cost = cost
+                        best_action = action
+
+            if best_action is not None:
+                dx, dy = actions[best_action]
+                new_row, new_col = queen_pos[0] + dx, queen_pos[1] + dy
+
+                self.grid[queen_pos[0]][queen_pos[1]] = 'T'
+                queen_pos = (new_row, new_col)
+                self.grid[queen_pos[0]][queen_pos[1]] = 'Q'
+
     @classmethod
     def get_egg_coordinate(cls, grid):
         food_coordinates = []

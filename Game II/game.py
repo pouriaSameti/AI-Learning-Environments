@@ -155,6 +155,28 @@ class AngryGame:
         self.grid = copy.deepcopy(self.__base_grid)
         self.num_actions = 0
 
+    def hen_step(self, agent_action):
+        hen_pos = self.get_hen_position(self.grid)
+
+        actions = {
+            0: (-1, 0),  # Up
+            1: (1, 0),   # Down
+            2: (0, -1),  # Left
+            3: (0, 1),   # Right
+        }
+
+        dx, dy = actions[agent_action]
+        new_row = hen_pos[0] + dx
+        new_col = hen_pos[1] + dy
+
+        if self.__is_valid_for_hen_position(self.grid, new_row, new_col):
+
+            self.grid[hen_pos[0]][hen_pos[1]] = 'T'
+            hen_pos = (new_row, new_col)
+            self.grid[hen_pos[0]][hen_pos[1]] = 'H'
+
+            self.num_actions += 1
+
     @classmethod
     def get_egg_coordinate(cls, grid):
         food_coordinates = []

@@ -232,6 +232,34 @@ class AngryGame:
                 self.grid[queen_pos[0]][queen_pos[1]] = 'Q'
 
     @classmethod
+    def generate_hen_successors(cls, grid):
+        hen_pos = cls.get_hen_position(grid)
+        if not hen_pos:
+            return []
+
+        actions = {
+            0: (-1, 0),  # Up
+            1: (1, 0),   # Down
+            2: (0, -1),  # Left
+            3: (0, 1),   # Right
+        }
+
+        successors = []
+        for action in actions:
+            dx, dy = actions[action]
+            new_row, new_col = hen_pos[0] + dx, hen_pos[1] + dy
+            if cls.__is_valid_for_hen_position(grid, new_row, new_col):
+
+                successor_grid = copy.deepcopy(grid)
+
+                successor_grid[new_row][new_col] = 'H'
+
+                successor_grid[hen_pos[0]][hen_pos[1]] = 'T'
+                successors.append((successor_grid, action))
+
+        return successors
+    
+    @classmethod
     def get_egg_coordinate(cls, grid):
         food_coordinates = []
         for r in range(len(grid)):

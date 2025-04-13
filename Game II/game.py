@@ -286,6 +286,31 @@ class AngryGame:
         return successors
 
     @classmethod
+    def generate_bird_successors(cls, grid):
+        bird_pos = cls.get_bird_position(grid)
+        if not bird_pos:
+            return []
+
+        actions = {
+            0: (-1, 0),  # Up
+            1: (1, 0),   # Down
+            2: (0, -1),  # Left
+            3: (0, 1),   # Right
+        }
+
+        successors = []
+        for action, (dx, dy) in actions.items():
+            new_row, new_col = bird_pos[0] + dx, bird_pos[1] + dy
+            if cls.__is_valid_for_bird_position(grid, new_row, new_col):
+                successor_grid = copy.deepcopy(grid)
+
+                successor_grid[new_row][new_col] = 'B'
+                successor_grid[bird_pos[0]][bird_pos[1]] = 'T'
+                successors.append((successor_grid, action))
+
+        return successors
+    
+    @classmethod
     def get_egg_coordinate(cls, grid):
         food_coordinates = []
         for r in range(len(grid)):

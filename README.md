@@ -6,7 +6,7 @@ project phases covering key AI domains such as **Markov Decision Processes (MDP)
 
 ### Table of Contents
 - [MDP](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#markov-decision-processes)<br>
-- [RL]()<br>
+- [RL](https://github.com/pouriaSameti/AI-Learning-Environments/blob/main/README.md#reinforcement-learning)<br>
 - [Game I]()<br>
 - [Game II]()<br>
 - [FOL]()<br>
@@ -79,6 +79,20 @@ This project involves designing an "Unknown Environment" where students will imp
 
 
 ### Solution
+To complete this project, follow these steps:
+
+1. **Choose and implement a learning algorithm** (e.g., Q-learning) that allows the agent to interact with the unknown environment and derive a policy. You are encouraged to experiment with different algorithms and compare their performance.<br>
+
+2. Unlike the previous project, the optimal policy cannot be learned in a single episode. The agent must go through **multiple episodes**, gradually updating its knowledge (e.g., a Q-table). After each episode, the updated Q-table should be saved and reused in the next run to enable learning over time.
+
+3. To monitor the convergence of your algorithm, compute the **Value Difference** after each episode using the formula below:
+   $$\text{Value Difference} = \sum_{s \in S} \sum_{a \in A} \left| Q^{(k+1)}(s, a) - Q^{(k)}(s, a) \right|$$<br> <br> This metric compares the Q-values before and after an update in a given episode. Store this value after each episode and plot it to visualize convergence. When the Value Difference drops below a small threshold (e.g., 0.01 or 0.001), the learning process can be considered converged.
+
+4. **Visualize the learned policy** by creating an 8×8 map where each cell displays the action suggested by the final policy for that state.<br>
+5. Finally, **allow the agent to act in the environment** using the converged policy from the learned Q-table to assess its performance.
+
+> [!CAUTION]
+> **The student should maintain multiple Q-tables, one for each target, and ensure that all these Q-tables converge.**
 
 
 ### Installation

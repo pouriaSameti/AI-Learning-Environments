@@ -8,8 +8,8 @@ project phases covering key AI domains such as **Markov Decision Processes (MDP)
 - [MDP](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#markov-decision-processes)<br>
 - [RL](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#reinforcement-learning)<br>
 - [Game I](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#game-i--adversarial-search-in-grid-based-environment)<br>
-- [Game II]()<br>
-- [FOL]()<br>
+- [Game II](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#game-ii--multi-agent-adversarial-search-in-grid-based)<br>
+- [FOL](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#first-order-logic)<br>
 ------------------
 
 ## Markov Decision Processes
@@ -217,3 +217,32 @@ To complete the project:
 ![image](https://github.com/user-attachments/assets/5a152c41-bf30-4304-82a0-086b9d7c0762)
 --------------------------
 ## First Order Logic
+This stage introduces a **logic-based intelligent agent** that navigates the same grid-based environment from previous stages, but now using **First-Order Logic (FOL)** reasoning. The agent must infer a **valid path to specific goals—in** this case, pigs—using a Prolog-based knowledge base. The environment remains the same, but the decision-making relies entirely on logical inference, not search or planning algorithms.
+
+### Objectives
+The goal is to design a reusable, environment-agnostic **FOL knowledge base**, and use a **Python–Prolog interface** to guide the agent through the game world toward its targets.
+
+### Environment Features
+- The environment remains a **10×10 grid**, as used in previous stages.<br>
+
+- The agent must **visit and consume all pigs** (i.e., cover goal positions) to end the game successfully.
+- The agent must avoid obstacles and determine a valid, complete path through inference.
+- The entire reasoning and path extraction must occur **within the logic engine (Prolog)**—no post-processing or external path adjustments in Python are allowed.
+
+### Solution
+1. **Design the KB**: Create a `.pl` file using Prolog syntax. Define facts and rules for agent position, obstacles, pigs (goals), environment limits, and valid moves. Make it reusable for different maps.<br>
+
+2. **Load the KB in Python**: Use the `pyswip` library to load the `.pl` file into Python, allowing you to interface with Prolog for logical inference.<br>
+3. **Send the Query**: From Python, send a query to Prolog that returns a list of actions (e.g., `[right, down, ...]`) leading the agent to consume all pigs while obeying all rules.<br>
+4. **Use the Output**: Take the action list returned by Prolog and pass it directly to the game. Do not modify or process the result in Python.<br>
+
+### Tools Required
+- **Prolog (SWI-Prolog)**: Logic programming language for defining the knowledge base. Download SWI-Prolog from the official site.<br>
+
+- **Pyswip**: Python interface for interacting with SWI-Prolog.
+  Install pyswip via:
+  ```python
+  pip install pyswip
+  ```
+### Environment
+![image](https://github.com/user-attachments/assets/a286074f-dcde-46ca-98b0-c37a8668d2a9)

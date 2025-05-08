@@ -6,7 +6,7 @@ project phases covering key AI domains such as **Markov Decision Processes (MDP)
 
 ### Table of Contents
 - [MDP](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#markov-decision-processes)<br>
-- [RL](https://github.com/pouriaSameti/AI-Learning-Environments/blob/main/README.md#reinforcement-learning)<br>
+- [RL](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#reinforcement-learning)<br>
 - [Game I]()<br>
 - [Game II]()<br>
 - [FOL]()<br>
@@ -36,15 +36,6 @@ To solve this project, follow these steps:
 1. **Implement a reward function** to assign rewards to each target (e.g., pigs) and eggs in the environment. The output of this step should be a 3D tensor representing the reward map across different object types and positions.<br>
 
 2. **Apply a planning algorithm**, such as value iteration or policy iteration. Using the generated reward maps for pigs and eggs, run the algorithm to derive an optimal policy for the agent.
-
-### Installation
-To run this project, install the required dependencies using the following commands:
-```python
-  pip install numpy
-```
-```python
-  pip install pygame
-```
 <br>
 
 > [!NOTE]
@@ -94,21 +85,64 @@ To complete this project, follow these steps:
 > [!CAUTION]
 > **The student should maintain multiple Q-tables, one for each target, and ensure that all these Q-tables converge.**
 
-
-### Installation
-To run this project, install the required dependencies using the following commands:
-```python
-  pip install numpy
-```
-```python
-  pip install pygame
-```
-<br>
-
 > [!NOTE]
 > A detailed **instruction PDF** is provided alongside the project files. This document explains the available environment functions and how to interact with them, guiding students in using the predefined interfaces to build and test their implementations.
 
 ### Environment
 ![Screenshot 2025-05-08 170735](https://github.com/user-attachments/assets/d02eec7a-4ed3-4c5c-a153-75b8d123be45)
 
+--------------------------
+## Game I – Adversarial Search in Grid-Based Environment
+This project introduces an interactive, **turn-based 10×10 grid** environment, where two Max player and the Min player compete under adversarial conditions. The goal is to **implement and test game tree algorithms such as Minimax**, possibly with heuristic enhancements. This environment includes **dynamic win/lose conditions**, various entities with different reward/penalty values, and **deterministic state transitions**. It provides an ideal setup for learning and evaluating optimal decision-making using adversarial search strategies.
+
+### Objectives
+- Implement Minimax search (with or without enhancements) to plan optimal actions for the Hen.<br>
+
+- Develop a **heuristic evaluation function** to estimate the value of non-terminal states.
+- Experiment with adversarial planning techniques and evaluate how your strategy performs across different scenarios.
+- Analyze the behavior and effectiveness of Max (Hen) vs Min (Pig Queen) decision-making under constrained conditions.
+
+### Environment Features
+
+- The environment is a **10×10 grid** with two main players:
+  - **Hen (Max agent)**: attempts to gather points and reach the slingshot.<br>
+  - **Pig Queen (Min agent)**: tries to catch the Hen and prevent it from winning.
+
+- Other static entities include:
+  - **Eggs**: `+200` points when collected by the Hen.<br>
+  - **Pigs**: `-200` points if the Hen eats them.<br>
+  - **Rocks**: impassable obstacles for both players.<br>
+  - **Slingshot**: reaching it grants the Hen +400 points and ends the game in a win.<br>
+  - **Pig Queen**: if it catches the Hen, the game ends in a loss with -1000 points.<br>
+
+- The Hen can perform four actions: `up`, `down`, `left`, and `right`. Each action results in a `-1` point penalty.<br>
+- The Pig Queen also moves using the same four actions and tries to minimize the Hen's score by approaching it intelligently. It cannot interact with eggs or pigs.<br>
+- Action order: In each turn, the **Hen moves first, followed by the Queen**.<br>
+- The game is **deterministic—no stochastic transitions**.<br>
+- The maximum number of **Hen moves is 150**. If the Hen does not reach the slingshot within this limit, the **game ends in a loss**.
+- The environment has two modes:
+  ```python
+  env = AngryGame(template='simple')
+  ```
+  ```python
+  env = AngryGame(template='hard')
+  ```
+  Your agent must be designed to succeed in both modes.
+
+### Solution
+To complete this project:
+1. **Implement a heuristic evaluation function** for non-terminal states. This is crucial, especially in deep game trees where reaching a terminal state (win/loss) isn't always feasible within search limits.<br>
+
+2. **Design a Minimax-based decision algorithm** that selects actions for the Hen based on the current game state.<br>
+3. Use provided interaction functions from the environment to simulate and evaluate game outcomes.<br>
+4. Your agent must be able to:
+  + Accumulate enough points from eggs and the slingshot.
+  + Avoid pigs and especially the Queen.
+  + Plan moves with awareness of the Queen's future actions (i.e., adversarial reasoning).<br>
+
+> [!NOTE]
+> A detailed **instruction PDF** is provided alongside the project files. This document explains the available environment functions and how to interact with them, guiding students in using the predefined interfaces to build and test their implementations.
+
+### Environment
+![image](https://github.com/user-attachments/assets/ac778875-4cce-42cd-8cf6-a93f9497d459)
 --------------------------

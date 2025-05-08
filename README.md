@@ -7,7 +7,7 @@ project phases covering key AI domains such as **Markov Decision Processes (MDP)
 ### Table of Contents
 - [MDP](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#markov-decision-processes)<br>
 - [RL](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#reinforcement-learning)<br>
-- [Game I]()<br>
+- [Game I](https://github.com/pouriaSameti/AI-Learning-Environments?tab=readme-ov-file#game-i--adversarial-search-in-grid-based-environment)<br>
 - [Game II]()<br>
 - [FOL]()<br>
 ------------------
@@ -98,12 +98,11 @@ This project introduces an interactive, **turn-based 10×10 grid** environment, 
 ### Objectives
 - Implement Minimax search (with or without enhancements) to plan optimal actions for the Hen.<br>
 
-- Develop a **heuristic evaluation function** to estimate the value of non-terminal states.
-- Experiment with adversarial planning techniques and evaluate how your strategy performs across different scenarios.
-- Analyze the behavior and effectiveness of Max (Hen) vs Min (Pig Queen) decision-making under constrained conditions.
+- Develop a **heuristic evaluation function** to estimate the value of non-terminal states.<br>
+- Experiment with adversarial planning techniques and evaluate how your strategy performs across different scenarios.<br>
+- Analyze the behavior and effectiveness of Max (Hen) vs Min (Pig Queen) decision-making under constrained conditions.<br>
 
 ### Environment Features
-
 - The environment is a **10×10 grid** with two main players:
   - **Hen (Max agent)**: attempts to gather points and reach the slingshot.<br>
   - **Pig Queen (Min agent)**: tries to catch the Hen and prevent it from winning.
@@ -146,3 +145,75 @@ To complete this project:
 ### Environment
 ![image](https://github.com/user-attachments/assets/ac778875-4cce-42cd-8cf6-a93f9497d459)
 --------------------------
+## Game II – Multi-Agent Adversarial Search in Grid-Based
+Game II is an advanced interactive grid-based game environment designed for experimenting with **multi-agent adversarial search algorithms such as Minimax**. The environment presents complex decision-making challenges, dynamic win/lose conditions, and reward structures. The main goal is to implement coordinated strategies using adversarial game trees to find optimal actions for cooperating agents in the presence of a competitive opponent.
+
+
+### Objectives
+- Provide a platform for experimenting with game tree enhancements and extensions.<br>
+
+- Evaluate the effectiveness of the algorithms in decision-making for various entities (e.g., Hen, Bird, Queen).<br>
+- Implement game tree algorithms in the environment.<br>
+
+### Environment Features
+The environment is a **10×10 grid**, containing:
+- **Hen (Max agent)**: Can eat eggs and pigs. Each move has a `-1` penalty, collecting an egg gives `+200`, eating a pig results in `-200`. Reaching the slingshot grants `+250` points and a win. The Queen can kill the Hen, resulting in `-1000` points and a loss.<br>
+- **Bird (Max agent)**: Can kill the Queen, ending the game with `+600` points and a win. Each move has a `-1` penalty. Cannot interact with eggs, pigs, or slingshot. Cannot move through rocks or the Hen.<br>
+- **Pig Queen (Min agent)**: Seeks and kills the Hen, resulting in a loss. Cannot move through slingshot, rocks, eggs, pigs, or the Bird. Moves intelligently toward the Hen.<br>
+- Static entities:
+  - Eggs (+200 if collected by the Hen),
+  - Pigs (-200 if eaten by the Hen),
+  - Rocks (impassable),
+  - Slingshot (reaching it wins the game for the Hen).
+
+- The game is **deterministic** with no stochastic transitions.<br>
+- Action order per turn:
+  - Hen
+  - Bird
+  - Pig Queen
+
+- Action constraints:
+  - Each of the Hen and Bird has four possible actions: `up`, `down`, `left`, `right`.
+  - The combined **total number of actions taken by Hen and Bird must not exceed 200**. If it does, the game ends in a loss.<br>
+- Game ends if:
+  - The Hen is caught by the Queen → loss.
+  - The Hen reaches the slingshot → win.
+  - The Bird kills the Queen → win.
+
+- The environment has two modes:
+  ```python
+  env = AngryGame(template='simple')
+  ```
+  ```python
+  env = AngryGame(template='hard')
+  ```
+  Your agent must be designed to succeed in both modes.<br>
+
+> [!CAUTION]
+> **The Hen and Bird are cooperative Max agents, while the Pig Queen is the adversarial Min agent.**
+
+### Solution
+To complete the project:
+1. Implement a **multi-agent game tree algorithm** to choose actions for both the Hen and the Bird.<br>
+
+2. Use the environment’s API functions (provided) to simulate action outcomes and explore the game tree.<br>
+
+3. You must define **two separate heuristic** evaluation functions. One for the Hen and One for the Bird.<br>
+
+4. Action selection logic:<br>
+  - When selecting a move for the Hen, the game tree should alternate levels in the order: Hen → Bird → Queen.<br>
+  - When selecting a move for the Bird, the tree must alternate levels in the order: Bird → Queen → Hen.<br>
+
+5. Nodes in the tree are scored using:<br>
+   + Actual game rewards (terminal states).<br>
+   + Estimated heuristic scores (non-terminal states).<br>
+
+6. Your agents must make decisions that **not only lead to winning but also maximize the final score** before reaching terminal conditions.<br>
+
+> [!NOTE]
+> A detailed **instruction PDF** is provided alongside the project files. This document explains the available environment functions and how to interact with them, guiding students in using the predefined interfaces to build and test their implementations.
+
+### Environment
+![image](https://github.com/user-attachments/assets/5a152c41-bf30-4304-82a0-086b9d7c0762)
+--------------------------
+## First Order Logic
